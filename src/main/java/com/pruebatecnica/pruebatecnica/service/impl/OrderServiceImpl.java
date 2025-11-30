@@ -40,9 +40,21 @@ public class OrderServiceImpl implements OrderService {
         orderValidator.validate(request);
         Order order = new Order(request.getCustomerName(), request.getCustomerEmail());
         List<OrderItem> orderItems = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal total = calculateTotal(orderItems, order, request.getItems());
 
-        for (OrderItemRequest itemRequest : request.getItems()) {
+        for (DiscountPolicy discountPolicy : discountPolicies)
+            total = discountPolicy.apply(total, orderItems);
+
+        order.setItems(orderItems);
+        order.setTotalAmount(total);
+        order.setStatus(OrderStatus.CONFIRMED);
+        
+        return orderRepository.save(order);
+    }
+
+    private BigDecimal calculateTotal(List<OrderItem> orderItems,Order order, List<OrderItemRequest> items) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (OrderItemRequest itemRequest : items) {
             itemValidator.validate(itemRequest);
 
             Product product = productService.reserveStock(
@@ -58,16 +70,7 @@ public class OrderServiceImpl implements OrderService {
                     product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()))
             );
         }
-
-        for (DiscountPolicy policy : discountPolicies) {
-            total = policy.apply(total, orderItems);
-        }
-
-        order.setItems(orderItems);
-        order.setTotalAmount(total);
-        order.setStatus(OrderStatus.CONFIRMED);
-        
-        return orderRepository.save(order);
+        return total;
     }
 
     @Override
