@@ -6,6 +6,7 @@ import com.pruebatecnica.pruebatecnica.model.Order;
 import com.pruebatecnica.pruebatecnica.model.Product;
 import com.pruebatecnica.pruebatecnica.repository.OrderRepository;
 import com.pruebatecnica.pruebatecnica.repository.ProductRepository;
+import com.pruebatecnica.pruebatecnica.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceImplTest {
 
     @Mock
     private OrderRepository orderRepository;
@@ -30,7 +31,7 @@ class OrderServiceTest {
     private ProductRepository productRepository;
 
     @InjectMocks
-    private OrderService orderService;
+    private OrderServiceImpl orderServiceImpl;
 
     /**
      * NOTA IMPORTANTE: Estos tests están incompletos intencionalmente.
@@ -77,7 +78,7 @@ class OrderServiceTest {
         // Act & Assert
         // Este test podría fallar después de la refactorización - los candidatos deben arreglarlo
         assertDoesNotThrow(() -> {
-            Order result = orderService.createOrder(request);
+            Order result = orderServiceImpl.createOrder(request);
             assertNotNull(result);
             assertEquals("John Doe", result.getCustomerName());
             assertEquals(BigDecimal.valueOf(20.00), result.getTotalAmount());
