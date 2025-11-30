@@ -1,5 +1,7 @@
 package com.pruebatecnica.pruebatecnica.service.impl;
 
+import com.pruebatecnica.pruebatecnica.exception.InsufficientStockException;
+import com.pruebatecnica.pruebatecnica.exception.ProductNotFoundException;
 import com.pruebatecnica.pruebatecnica.model.Product;
 import com.pruebatecnica.pruebatecnica.repository.ProductRepository;
 import com.pruebatecnica.pruebatecnica.service.ProductService;
@@ -32,5 +34,15 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product saveProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public Product reserveStock(Long productId, Integer qty) {
+        Product p = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+        if (p.getStock() < qty)
+            throw new InsufficientStockException(p.getName(), qty, p.getStock());
+        p.setStock(p.getStock() - qty);
+        return productRepository.save(p);
     }
 }

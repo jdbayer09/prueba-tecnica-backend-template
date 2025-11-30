@@ -9,4 +9,6 @@ public interface ProductService {
     Product getProductById(Long productId);
     List<Product> getAllProducts();
     Product saveProduct(Product product);
+
+    Product reserveStock(Long productId, Integer qty);
 }
