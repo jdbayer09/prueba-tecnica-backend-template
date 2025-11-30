@@ -1,6 +1,7 @@
 package com.pruebatecnica.pruebatecnica.controller;
 
 import com.pruebatecnica.pruebatecnica.dto.CreateOrderRequest;
+import com.pruebatecnica.pruebatecnica.dto.OrderResponse;
 import com.pruebatecnica.pruebatecnica.model.Order;
 import com.pruebatecnica.pruebatecnica.service.OrderService;
 import jakarta.validation.Valid;
@@ -19,10 +20,10 @@ public class OrderController {
     private OrderService orderService;
     
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody CreateOrderRequest request) {
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         try {
             Order order = orderService.createOrder(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(order);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new OrderResponse(order));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (RuntimeException e) {
@@ -31,18 +32,18 @@ public class OrderController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id) {
         try {
             Order order = orderService.getOrderById(id);
-            return ResponseEntity.ok(order);
+            return ResponseEntity.ok(new OrderResponse(order));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
     
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orders.stream().map(OrderResponse::new).toList());
     }
 }
