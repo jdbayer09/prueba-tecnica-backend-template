@@ -31,6 +31,13 @@ public class Product {
         this.price = price;
         this.stock = stock;
     }
+
+    public Product(Long id, String name, BigDecimal price, Integer stock) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
     
     // Getters and Setters
     public Long getId() {

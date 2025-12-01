@@ -10,18 +10,12 @@ Es Black Friday y el sistema recibe 50 pedidos por segundo del iPhone 15 que sol
 
 ### Tu Respuesta
 ```
-[Escribe aquí tu respuesta]
-
-Posibles enfoques a considerar:
-- Transacciones y niveles de aislamiento
-- Bloqueos (locks) en base de datos
-- Bloqueos optimistas vs pesimistas
-- Uso de @Version para Optimistic Locking
-- SELECT FOR UPDATE
-- Implementación de un sistema de colas
-- Otros mecanismos...
-
-Explica cuál elegirías y por qué.
+En este caso elegiria 2 opciones las cuales pueden coexistir:
+-   Crearia una constraint en la base de datos el cual me valide que el stock no sea negativo, 
+    esto me ayuda a que desde la base de datos tengamos una regla.
+-   Lo complementaria con un bloqueo del registro para que la primera interaccion de la api lo bloquee
+    y la segunda tenga que esperar, el stock no va a ser negativo por que se ejecutan en secuencia.
+    Utilizaria en spring @Lock(LockModeType.PESSIMISTIC_WRITE)
 ```
 
 ---
@@ -39,16 +33,10 @@ Configurar TODAS las relaciones JPA (`@OneToMany`, `@ManyToOne`) con `FetchType.
 
 ### Tu Respuesta
 ```
-[Escribe aquí tu respuesta]
-
-Considera estos puntos:
-- Problema N+1 vs Carga excesiva de memoria
-- Impacto en el rendimiento con grandes volúmenes de datos
-- Alternativas mejores (DTO projection, fetch joins específicos, etc.)
-- Cuándo usar EAGER vs LAZY
-- Mejores prácticas para manejar LazyInitializationException
-
-¿Aceptarías la propuesta? ¿Qué alternativas sugerirías?
+Utilizar EAGER no es una buena practica en todas las consultas ya que puede llevar a tener problemas de rendimiento
+y utilizar mas recursos de memoria, sacar consultas con mayor cantidad de datos puede llevar a que se vuelva un problema de rendimiento.
+En este caso la solucion seria utilizar FetchType.LAZY y solo traer los datos cuando se necesiten, utilizando servicios transaccionales
+consultas especificas con fetch joins.
 ```
 
 ---
@@ -57,15 +45,19 @@ Considera estos puntos:
 
 ### Sobre el Refactoring Realizado
 ```
-[Opcional: Explica brevemente las decisiones más importantes que tomaste durante la refactorización]
+Teniendo en cuenta que la funcionalidad hacia muchas cosas a la vez, lo primero que valide fue la separacion de responsabilidades
+separando cada una de las acciones adicionales en su propia clase, luego fui validando cada una de estas acciones a que pertenecia, 
+ya que no todo era con respecto a la orden si no que habia funciones de los productos de la orden.
 ```
 
 ### Patrones de Diseño Aplicados
 ```
-[Opcional: Menciona qué patrones de diseño utilizaste y por qué]
+Se utilizo el patron Strategy Pattern, ya que la forma de hacer el descuento se aplica en varias estrategias intercambiables.
+Dependency Injection, ya que todas las dependencias no se construyen en el método si no que las recibe desde otro lugar.
 ```
 
 ### Posibles Mejoras Futuras
 ```
-[Opcional: ¿Qué otras mejoras implementarías si tuvieras más tiempo?]
+Se podria separar en capas y utilizar clean architecture, donde el domain tengamos toda la logica de negocio separada 
+sin necesidad de depender del framework de springboot.
 ```
