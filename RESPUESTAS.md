@@ -64,10 +64,12 @@ ya que no todo era con respecto a la orden si no que habia funciones de los prod
 
 ### Patrones de Diseño Aplicados
 ```
-[Opcional: Menciona qué patrones de diseño utilizaste y por qué]
+Se utilizo el patron Strategy Pattern, ya que la forma de hacer el descuento se aplica en varias estrategias intercambiables.
+Dependency Injection, ya que todas las dependencias no se construyen en el método si no que las recibe desde otro lugar.
 ```
 
 ### Posibles Mejoras Futuras
 ```
-[Opcional: ¿Qué otras mejoras implementarías si tuvieras más tiempo?]
+Se podria separar en capas y utilizar clean architecture, donde el domain tengamos toda la logica de negocio separada 
+sin necesidad de depender del framework de springboot.
 ```
