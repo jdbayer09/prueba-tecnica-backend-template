@@ -57,7 +57,9 @@ Considera estos puntos:
 
 ### Sobre el Refactoring Realizado
 ```
-[Opcional: Explica brevemente las decisiones más importantes que tomaste durante la refactorización]
+Teniendo en cuenta que la funcionalidad hacia muchas cosas a la vez, lo primero que valide fue la separacion de responsabilidades
+separando cada una de las acciones adicionales en su propia clase, luego fui validando cada una de estas acciones a que pertenecia, 
+ya que no todo era con respecto a la orden si no que habia funciones de los productos de la orden.
 ```
 
 ### Patrones de Diseño Aplicados
